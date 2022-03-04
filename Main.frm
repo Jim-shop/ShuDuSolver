@@ -3,10 +3,10 @@ Begin VB.Form frmMain
    Appearance      =   0  'Flat
    BackColor       =   &H80000005&
    Caption         =   "数独"
-   ClientHeight    =   6240
+   ClientHeight    =   7560
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   8385
+   ClientWidth     =   7515
    BeginProperty Font 
       Name            =   "微软雅黑"
       Size            =   9
@@ -17,43 +17,35 @@ Begin VB.Form frmMain
       Strikethrough   =   0   'False
    EndProperty
    LinkTopic       =   "Form1"
-   ScaleHeight     =   6240
-   ScaleWidth      =   8385
+   ScaleHeight     =   7560
+   ScaleWidth      =   7515
    StartUpPosition =   3  '窗口缺省
    WhatsThisHelp   =   -1  'True
    Begin VB.CommandButton cmdImport 
       Appearance      =   0  'Flat
       Caption         =   "导入"
       Height          =   495
-      Left            =   4200
+      Left            =   3360
       TabIndex        =   85
-      Top             =   5280
+      Top             =   5040
       Width           =   1095
    End
    Begin VB.TextBox txtInput 
       Alignment       =   2  'Center
       Appearance      =   0  'Flat
-      BeginProperty Font 
-         Name            =   "微软雅黑"
-         Size            =   14.25
-         Charset         =   134
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      Height          =   1215
+      Height          =   2415
       Left            =   240
       MultiLine       =   -1  'True
       TabIndex        =   84
+      Text            =   "Main.frx":0000
       Top             =   4920
-      Width           =   3855
+      Width           =   2775
    End
    Begin VB.CommandButton cmdSolve 
       Appearance      =   0  'Flat
       Caption         =   "求解"
       Height          =   495
-      Left            =   6720
+      Left            =   5520
       TabIndex        =   82
       Top             =   960
       Width           =   1095
@@ -1718,16 +1710,25 @@ Begin VB.Form frmMain
       Appearance      =   0  'Flat
       Caption         =   "清空"
       Height          =   495
-      Left            =   6720
+      Left            =   5520
       TabIndex        =   0
       Top             =   360
       Width           =   1095
    End
    Begin VB.Label lblDebug 
-      Height          =   3975
-      Left            =   6120
+      BeginProperty Font 
+         Name            =   "Consolas"
+         Size            =   9
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   5535
+      Left            =   5040
       TabIndex        =   83
-      Top             =   2160
+      Top             =   1800
       Width           =   2175
    End
 End
@@ -1752,13 +1753,10 @@ Option Explicit
 ' 3. 回到第一步
 '    -- 清空按钮、导入按钮
 
-' 记录一个格子里可能出现的数字（已经确定的数字这里全false）
-Private Type Possibility
-    p(9) As Boolean
-End Type
+
 
 ' 记录每个格子里可能出现的数字
-Private storage(81) As Possibility
+Private storage(80) As possibility
 
 ' 是否已load题目
 Private isQuestionLoad As Boolean
@@ -1773,15 +1771,11 @@ Private Sub LoadQuestion()
                 If .Text = "" Then ' 没有填入数据的格，也就是作答格
                     .Locked = False
                     .BackColor = vbWhite
-                    For j = 0 To 8
-                        storage(i).p(j) = True
-                    Next j
+                    PossibilitySetAll storage(i), True
                 Else ' 填入数据的信息格
                     .Locked = True
                     .BackColor = &HDDDDDD
-                    For j = 0 To 8
-                        storage(i).p(j) = False
-                    Next j
+                    PossibilitySetAll storage(i), False
                 End If
             End With
         Next i
@@ -1825,16 +1819,23 @@ Private Sub cmdImport_Click()
             txtTable(tablepos) = ""
             tablepos = tablepos + 1
         End Select
-        If tablepos >= 80 Then Exit Do
+        If tablepos > 80 Then Exit Do
         txtpos = txtpos + 1
     Loop
 End Sub
 
 Private Sub cmdSolve_Click()
     ' 解数独。
+    
     LoadQuestion
-    Dim Index%, row%, column%, count%, i%, j%, tempNum%, sumPossibility%, lastPossibleNum%
-    DebugInfo "", "", True
+    
+    Dim i%, j%, k%
+    Dim Index%, row%, column%, tempNum%
+    Dim actionCount%, sumPossibility%, lastPossibleNum%
+    Dim numCount%(8), numLastOccur%(8)
+    
+    DebugInfo "", "", True ' 清页
+    
     Do
         For Index = 0 To 80
             If txtTable(Index) <> "" Then ' 如果已经填入数据
@@ -1859,23 +1860,82 @@ Private Sub cmdSolve_Click()
             End If
         Next Index
         
-        ' 将没有其他可能性的的填写出来
-        count = 0
-        For Index = 0 To 80
-            sumPossibility = 0
-            For i = 0 To 8
-                If storage(Index).p(i) = True Then
-                    sumPossibility = sumPossibility + 1
-                    lastPossibleNum = i
+        ' 如果说一行/列/方块中只有一格有某个数，则那一格就是那个数
+        actionCount = 0
+        
+        For i = 0 To 8 ' 遍历行
+            For k = 0 To 8 ' 初始化
+                numCount(k) = 0
+            Next k
+            For j = 0 To 8 ' 统计一行中某数出现次数
+                For k = 0 To 8
+                    If storage(i * 9 + j).p(k) = True Then
+                        numCount(k) = numCount(k) + 1
+                        numLastOccur(k) = i * 9 + j
+                    End If
+                Next k
+            Next j
+            For k = 0 To 8 ' 检查是否只有一格有某个数
+                If numCount(k) = 1 Then
+                    txtTable(numLastOccur(k)) = k + 1
+                    PossibilitySetAll storage(numLastOccur(k)), False
+                    actionCount = actionCount + 1
                 End If
+            Next k
+        Next i
+        If actionCount <> 0 Then GoTo NextLoop ' 如果有推导出来，就要重新建立可能性表
+                
+        For j = 0 To 8 ' 遍历列
+            For k = 0 To 8 ' 初始化
+                numCount(k) = 0
+            Next k
+            For i = 0 To 8 ' 统计一列中某数出现次数
+                For k = 0 To 8
+                    If storage(i * 9 + j).p(k) = True Then
+                        numCount(k) = numCount(k) + 1
+                        numLastOccur(k) = i * 9 + j
+                    End If
+                Next k
             Next i
-            If sumPossibility = 1 Then
-              count = count + 1
-                txtTable(Index) = lastPossibleNum + 1
-            End If
-        Next Index
-        DebugInfo "推导出" & count & "个位置"
-    Loop While count <> 0 ' 当没有进展时结束
+            For k = 0 To 8 ' 检查是否只有一格有某个数
+                If numCount(k) = 1 Then
+                    txtTable(numLastOccur(k)) = k + 1
+                    PossibilitySetAll storage(numLastOccur(k)), False
+                    actionCount = actionCount + 1
+                End If
+            Next k
+        Next j
+        If actionCount <> 0 Then GoTo NextLoop ' 如果有推导出来，就要重新建立可能性表
+        
+        For row = 0 To 8 Step 3 ' 遍历方格
+            For column = 0 To 8 Step 3
+                For k = 0 To 8 ' 初始化
+                    numCount(k) = 0
+                Next k
+                For i = row To row + 2 ' 统计方格中某数出现次数
+                    For j = column To column + 2
+                        For k = 0 To 8
+                            If storage(i * 9 + j).p(k) = True Then
+                                numCount(k) = numCount(k) + 1
+                                numLastOccur(k) = i * 9 + j
+                            End If
+                        Next k
+                    Next j
+                Next i
+                For k = 0 To 8 ' 检查是否只有一格有某个数
+                    If numCount(k) = 1 Then
+                        txtTable(numLastOccur(k)) = k + 1
+                        PossibilitySetAll storage(numLastOccur(k)), False
+                        actionCount = actionCount + 1
+                    End If
+                Next k
+            Next column
+        Next row
+        
+NextLoop:
+        DebugInfo "推导出" & actionCount & "个位置"
+    'Loop While False
+    Loop While actionCount <> 0 ' 当没有进展时结束
 End Sub
 
 Private Sub PrintPossibility(Index%)
@@ -1888,13 +1948,13 @@ Private Sub PrintPossibility(Index%)
         If storage(Index).p(i) = True Then
             DebugInfo (i + 1), " "
         Else
-            DebugInfo " ", " "
+            DebugInfo "_", " "
         End If
         If i Mod 3 = 2 Then DebugInfo ""
     Next i
 End Sub
 
-Private Sub DebugInfo(ByRef message$, Optional split$ = vbNewLine, Optional needRefresh As Boolean = False)
+Private Sub DebugInfo(ByRef message$, Optional ByRef split$ = vbNewLine, Optional needRefresh As Boolean = False)
     ' 在lblDebug中打印调试信息。
     ' needRefresh控制是否从头开始打印。
     
@@ -1911,10 +1971,11 @@ End Sub
 
 Private Sub txtTable_KeyPress(Index As Integer, KeyAscii As Integer)
     '   输入字符时的处理方式
-    ' 1. 输入的是数字，且是活动单元格，则替换原单元格内容，然后切换焦点到下一个单元格
-    ' 2. 输入的是退格键，若是活动单元格，且有内容，则删除原单元格内容，不切换焦点
+    ' 1. 输入的是数字1~9，且是活动单元格，则替换原单元格内容，然后切换焦点到下一个单元格
+    ' 2. 输入的是数字0，且是活动单元格，则清空内容，然后切换焦点到下一个
+    ' 3. 输入的是退格键，若是活动单元格，且有内容，则删除原单元格内容，不切换焦点
     '    否则，直接切换焦点到上一个，若没有上一个就留在原地
-    ' 3. 输入Enter，则切换焦点到下一行，如果没有下一行，就切换到求解按钮。
+    ' 4. 输入Enter，则切换焦点到下一行，如果没有下一行，就切换到求解按钮。
     ' 9. 其他情况，直接切换焦点到下一个
     '   切换焦点方法：
     ' 如果没有下一个单元格了，就切换到求解按钮。
@@ -1937,6 +1998,17 @@ Private Sub txtTable_KeyPress(Index As Integer, KeyAscii As Integer)
     Case 49 To 57 ' 数字 1~9
         If Not txtTable(Index).Locked Then
             txtTable(Index) = "" ' 清空文本框以读取数字
+        End If
+        If Index < 80 Then
+            txtTable(Index + 1).SetFocus
+        Else
+            cmdSolve.SetFocus
+        End If
+    
+    Case 48 ' 数字0
+        KeyAscii = 0 ' 忽略信号
+        If Not txtTable(Index).Locked Then
+            txtTable(Index) = ""
         End If
         If Index < 80 Then
             txtTable(Index + 1).SetFocus
