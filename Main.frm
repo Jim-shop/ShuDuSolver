@@ -1,12 +1,14 @@
 VERSION 5.00
 Begin VB.Form frmMain 
    Appearance      =   0  'Flat
+   AutoRedraw      =   -1  'True
    BackColor       =   &H80000005&
+   BorderStyle     =   1  'Fixed Single
    Caption         =   "数独"
    ClientHeight    =   7560
-   ClientLeft      =   120
-   ClientTop       =   465
-   ClientWidth     =   7515
+   ClientLeft      =   45
+   ClientTop       =   390
+   ClientWidth     =   6795
    BeginProperty Font 
       Name            =   "微软雅黑"
       Size            =   9
@@ -17,17 +19,51 @@ Begin VB.Form frmMain
       Strikethrough   =   0   'False
    EndProperty
    LinkTopic       =   "Form1"
+   MaxButton       =   0   'False
+   MinButton       =   0   'False
    ScaleHeight     =   7560
-   ScaleWidth      =   7515
+   ScaleWidth      =   6795
    StartUpPosition =   3  '窗口缺省
    WhatsThisHelp   =   -1  'True
+   Begin VB.CommandButton cmdExport 
+      Appearance      =   0  'Flat
+      Caption         =   "导出"
+      Height          =   495
+      Left            =   3480
+      TabIndex        =   85
+      Top             =   6480
+      Width           =   1095
+   End
+   Begin VB.TextBox txtDebug 
+      Alignment       =   2  'Center
+      Appearance      =   0  'Flat
+      Height          =   5775
+      IMEMode         =   1  'ON
+      Left            =   4920
+      MultiLine       =   -1  'True
+      OLEDragMode     =   1  'Automatic
+      OLEDropMode     =   2  'Automatic
+      ScrollBars      =   2  'Vertical
+      TabIndex        =   87
+      Top             =   1560
+      Width           =   1695
+   End
+   Begin VB.CommandButton cmdBackTrackSolve 
+      Appearance      =   0  'Flat
+      Caption         =   "回溯求解"
+      Height          =   495
+      Left            =   5160
+      TabIndex        =   83
+      Top             =   840
+      Width           =   1095
+   End
    Begin VB.CommandButton cmdImport 
       Appearance      =   0  'Flat
       Caption         =   "导入"
       Height          =   495
-      Left            =   3360
-      TabIndex        =   85
-      Top             =   5040
+      Left            =   3480
+      TabIndex        =   84
+      Top             =   5760
       Width           =   1095
    End
    Begin VB.TextBox txtInput 
@@ -36,18 +72,18 @@ Begin VB.Form frmMain
       Height          =   2415
       Left            =   240
       MultiLine       =   -1  'True
-      TabIndex        =   84
+      TabIndex        =   86
       Text            =   "Main.frx":0000
       Top             =   4920
       Width           =   2775
    End
-   Begin VB.CommandButton cmdSolve 
+   Begin VB.CommandButton cmdLogicSolve 
       Appearance      =   0  'Flat
-      Caption         =   "求解"
+      Caption         =   "逻辑求解"
       Height          =   495
-      Left            =   5520
+      Left            =   5160
       TabIndex        =   82
-      Top             =   960
+      Top             =   240
       Width           =   1095
    End
    Begin VB.TextBox txtTable 
@@ -1710,26 +1746,10 @@ Begin VB.Form frmMain
       Appearance      =   0  'Flat
       Caption         =   "清空"
       Height          =   495
-      Left            =   5520
+      Left            =   3480
       TabIndex        =   0
-      Top             =   360
+      Top             =   5040
       Width           =   1095
-   End
-   Begin VB.Label lblDebug 
-      BeginProperty Font 
-         Name            =   "Consolas"
-         Size            =   9
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      Height          =   5535
-      Left            =   5040
-      TabIndex        =   83
-      Top             =   1800
-      Width           =   2175
    End
 End
 Attribute VB_Name = "frmMain"
@@ -1796,8 +1816,80 @@ Private Sub ClearQuestion()
     Next i
 End Sub
 
+Private Sub BuildPossibility()
+    Dim i%, j%, index%, row%, column%, tempNum%
+    For index = 0 To 80
+        PossibilitySetAll storage(index), True
+    Next index
+    For index = 0 To 80
+        If txtTable(index) <> "" Then ' 如果已经填入数据
+            column = index Mod 9
+            row = index \ 9
+            tempNum = Val(txtTable(index)) - 1
+            
+            PossibilitySetAll storage(index), False ' 自己清除所有可能性
+            
+            For i = 0 To 8 ' 所在行中的所有元素清除可能性
+                storage(row * 9 + i).p(tempNum) = False
+            Next i
+            
+            For i = 0 To 8 ' 所在列中的所有元素清除可能性
+                storage(i * 9 + column).p(tempNum) = False
+            Next i
+            
+            For i = (row \ 3) * 3 To (row \ 3) * 3 + 2 ' 所在方格内的所有元素清除可能性
+                For j = (column \ 3) * 3 To (column \ 3) * 3 + 2
+                    storage(i * 9 + j).p(tempNum) = False
+                Next j
+            Next i
+            
+        End If
+    Next index
+End Sub
+
+Private Function BackTrack() As Boolean
+    Dim index%, tempNum%
+    
+    For index = 0 To 80
+        If txtTable(index) = "" Then
+            For tempNum = 0 To 8
+                If storage(index).p(tempNum) = True Then
+                    txtTable(index).Text = tempNum + 1
+                    BuildPossibility
+                    If BackTrack() = True Then
+                        '找到解
+                        'BackTrack = True
+                        'Exit Function
+                        BackTrack = True
+                        DebugInfo "可行解："
+                        DebugInfo Export
+                    End If
+                    txtTable(index).Text = ""
+                    BuildPossibility
+                End If
+            Next tempNum
+            '遍历所有数字都填不进去，宣告失败
+            BackTrack = False
+            Exit Function
+        End If
+    Next index
+    BackTrack = True
+End Function
+
+Private Sub cmdBackTrackSolve_Click()
+    '回溯法解数独
+    
+    LoadQuestion
+    BuildPossibility
+    BackTrack
+End Sub
+
 Private Sub cmdClear_Click()
     ClearQuestion
+End Sub
+
+Private Sub cmdExport_Click()
+    DebugInfo Export, , True
 End Sub
 
 Private Sub cmdImport_Click()
@@ -1824,43 +1916,31 @@ Private Sub cmdImport_Click()
     Loop
 End Sub
 
-Private Sub cmdSolve_Click()
-    ' 解数独。
+Private Function Export$()
+    Dim index%
+    For index = 0 To 80
+        If txtTable(index).Text = "" Then
+            Export = Export & "0"
+        Else
+            Export = Export & txtTable(index).Text
+        End If
+        If index Mod 9 = 8 Then Export = Export & vbNewLine
+    Next index
+End Function
+
+Private Sub cmdLogicSolve_Click()
+    ' 逻辑推断法解数独。
     
     LoadQuestion
     
     Dim i%, j%, k%
-    Dim Index%, row%, column%, tempNum%
+    Dim index%, row%, column%, tempNum%
     Dim actionCount%, sumPossibility%, lastPossibleNum%
     Dim numCount%(8), numLastOccur%(8)
     
-    DebugInfo "", "", True ' 清页
-    
     Do
-        For Index = 0 To 80
-            If txtTable(Index) <> "" Then ' 如果已经填入数据
-                column = Index Mod 9
-                row = Index \ 9
-                tempNum = Val(txtTable(Index)) - 1
-                
-                For i = 0 To 8 ' 所在行中的所有元素清除可能性
-                    storage(row * 9 + i).p(tempNum) = False
-                Next i
-                
-                For i = 0 To 8 ' 所在列中的所有元素清除可能性
-                    storage(i * 9 + column).p(tempNum) = False
-                Next i
-                
-                For i = (row \ 3) * 3 To (row \ 3) * 3 + 2 ' 所在方格内的所有元素清除可能性
-                    For j = (column \ 3) * 3 To (column \ 3) * 3 + 2
-                        storage(i * 9 + j).p(tempNum) = False
-                    Next j
-                Next i
-                
-            End If
-        Next Index
-        
         ' 如果说一行/列/方块中只有一格有某个数，则那一格就是那个数
+        BuildPossibility
         actionCount = 0
         
         For i = 0 To 8 ' 遍历行
@@ -1878,12 +1958,10 @@ Private Sub cmdSolve_Click()
             For k = 0 To 8 ' 检查是否只有一格有某个数
                 If numCount(k) = 1 Then
                     txtTable(numLastOccur(k)) = k + 1
-                    PossibilitySetAll storage(numLastOccur(k)), False
                     actionCount = actionCount + 1
                 End If
             Next k
         Next i
-        If actionCount <> 0 Then GoTo NextLoop ' 如果有推导出来，就要重新建立可能性表
                 
         For j = 0 To 8 ' 遍历列
             For k = 0 To 8 ' 初始化
@@ -1900,12 +1978,10 @@ Private Sub cmdSolve_Click()
             For k = 0 To 8 ' 检查是否只有一格有某个数
                 If numCount(k) = 1 Then
                     txtTable(numLastOccur(k)) = k + 1
-                    PossibilitySetAll storage(numLastOccur(k)), False
                     actionCount = actionCount + 1
                 End If
             Next k
         Next j
-        If actionCount <> 0 Then GoTo NextLoop ' 如果有推导出来，就要重新建立可能性表
         
         For row = 0 To 8 Step 3 ' 遍历方格
             For column = 0 To 8 Step 3
@@ -1925,51 +2001,45 @@ Private Sub cmdSolve_Click()
                 For k = 0 To 8 ' 检查是否只有一格有某个数
                     If numCount(k) = 1 Then
                         txtTable(numLastOccur(k)) = k + 1
-                        PossibilitySetAll storage(numLastOccur(k)), False
                         actionCount = actionCount + 1
                     End If
                 Next k
             Next column
         Next row
         
-NextLoop:
-        DebugInfo "推导出" & actionCount & "个位置"
-    'Loop While False
     Loop While actionCount <> 0 ' 当没有进展时结束
 End Sub
 
-Private Sub PrintPossibility(Index%)
-    ' 打印可能性信息
-    
-    DebugInfo "txtTable(" & Index & "):", , True
+Private Function possibility$(index%)
+    ' 可能性信息
     
     Dim i%
     For i = 0 To 8
-        If storage(Index).p(i) = True Then
-            DebugInfo (i + 1), " "
+        If storage(index).p(i) = True Then
+            possibility = possibility & (i + 1) & " "
         Else
-            DebugInfo "_", " "
+            possibility = possibility & "_" & " "
         End If
-        If i Mod 3 = 2 Then DebugInfo ""
     Next i
-End Sub
+End Function
 
 Private Sub DebugInfo(ByRef message$, Optional ByRef split$ = vbNewLine, Optional needRefresh As Boolean = False)
-    ' 在lblDebug中打印调试信息。
+    ' 在txtDebug中打印调试信息。
     ' needRefresh控制是否从头开始打印。
     
     If needRefresh Then
-        lblDebug.Caption = message & split
+        txtDebug.Text = message & split
     Else
-        lblDebug.Caption = lblDebug.Caption & message & split
+        txtDebug.Text = txtDebug.Text & message & split
     End If
 End Sub
 
 Private Sub Form_Load()
     isQuestionLoad = False
+    'EnableHighDPI Me
 End Sub
 
-Private Sub txtTable_KeyPress(Index As Integer, KeyAscii As Integer)
+Private Sub txtTable_KeyPress(index As Integer, KeyAscii As Integer)
     '   输入字符时的处理方式
     ' 1. 输入的是数字1~9，且是活动单元格，则替换原单元格内容，然后切换焦点到下一个单元格
     ' 2. 输入的是数字0，且是活动单元格，则清空内容，然后切换焦点到下一个
@@ -1982,52 +2052,52 @@ Private Sub txtTable_KeyPress(Index As Integer, KeyAscii As Integer)
     
     Select Case KeyAscii
     Case 8 ' 退格键
-        If Not txtTable(Index).Locked And txtTable(Index) <> "" Then
-            txtTable(Index) = ""
+        If Not txtTable(index).Locked And txtTable(index) <> "" Then
+            txtTable(index) = ""
         Else
-            If Index > 0 Then txtTable(Index - 1).SetFocus
+            If index > 0 Then txtTable(index - 1).SetFocus
         End If
         
     Case 13 ' 回车键
-        If Index < 72 Then
-            txtTable(Index + 9).SetFocus
+        If index < 72 Then
+            txtTable(index + 9).SetFocus
         Else
-            cmdSolve.SetFocus
+            cmdLogicSolve.SetFocus
         End If
         
     Case 49 To 57 ' 数字 1~9
-        If Not txtTable(Index).Locked Then
-            txtTable(Index) = "" ' 清空文本框以读取数字
+        If Not txtTable(index).Locked Then
+            txtTable(index) = "" ' 清空文本框以读取数字
         End If
-        If Index < 80 Then
-            txtTable(Index + 1).SetFocus
+        If index < 80 Then
+            txtTable(index + 1).SetFocus
         Else
-            cmdSolve.SetFocus
+            cmdLogicSolve.SetFocus
         End If
     
     Case 48 ' 数字0
         KeyAscii = 0 ' 忽略信号
-        If Not txtTable(Index).Locked Then
-            txtTable(Index) = ""
+        If Not txtTable(index).Locked Then
+            txtTable(index) = ""
         End If
-        If Index < 80 Then
-            txtTable(Index + 1).SetFocus
+        If index < 80 Then
+            txtTable(index + 1).SetFocus
         Else
-            cmdSolve.SetFocus
+            cmdLogicSolve.SetFocus
         End If
         
     Case Else
         KeyAscii = 0 ' 忽略信号
-        If Index < 80 Then
-            txtTable(Index + 1).SetFocus
+        If index < 80 Then
+            txtTable(index + 1).SetFocus
         Else
-            cmdSolve.SetFocus
+            cmdLogicSolve.SetFocus
         End If
         
     End Select
 
 End Sub
 
-Private Sub txtTable_MouseMove(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
-    PrintPossibility Index
+Private Sub txtTable_MouseMove(index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
+    txtTable(index).ToolTipText = possibility(index)
 End Sub
