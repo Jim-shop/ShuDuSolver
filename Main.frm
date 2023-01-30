@@ -8,7 +8,7 @@ Begin VB.Form frmMain
    ClientHeight    =   7560
    ClientLeft      =   45
    ClientTop       =   390
-   ClientWidth     =   6795
+   ClientWidth     =   4860
    BeginProperty Font 
       Name            =   "微软雅黑"
       Size            =   9
@@ -22,48 +22,70 @@ Begin VB.Form frmMain
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   7560
-   ScaleWidth      =   6795
+   ScaleWidth      =   4860
    StartUpPosition =   3  '窗口缺省
    WhatsThisHelp   =   -1  'True
+   Begin VB.CheckBox chkVisual 
+      Appearance      =   0  'Flat
+      BackColor       =   &H80000005&
+      Caption         =   "可视化"
+      ForeColor       =   &H80000008&
+      Height          =   375
+      Left            =   3600
+      TabIndex        =   87
+      Top             =   5160
+      Value           =   1  'Checked
+      Width           =   975
+   End
+   Begin VB.CommandButton cmdClear 
+      Appearance      =   0  'Flat
+      Caption         =   "清空棋盘"
+      Height          =   495
+      Left            =   2040
+      TabIndex        =   83
+      Top             =   5160
+      Width           =   1095
+   End
    Begin VB.CommandButton cmdExport 
       Appearance      =   0  'Flat
       Caption         =   "导出"
       Height          =   495
-      Left            =   3480
+      Left            =   2040
       TabIndex        =   85
-      Top             =   6480
+      Top             =   6600
       Width           =   1095
    End
    Begin VB.TextBox txtDebug 
       Alignment       =   2  'Center
       Appearance      =   0  'Flat
-      Height          =   5775
+      Height          =   5895
       IMEMode         =   1  'ON
       Left            =   4920
       MultiLine       =   -1  'True
       OLEDragMode     =   1  'Automatic
       OLEDropMode     =   2  'Automatic
       ScrollBars      =   2  'Vertical
-      TabIndex        =   87
+      TabIndex        =   88
       Top             =   1560
-      Width           =   1695
+      Visible         =   0   'False
+      Width           =   1815
    End
    Begin VB.CommandButton cmdBackTrackSolve 
       Appearance      =   0  'Flat
       Caption         =   "回溯求解"
       Height          =   495
-      Left            =   5160
-      TabIndex        =   83
-      Top             =   840
+      Left            =   3480
+      TabIndex        =   82
+      Top             =   6360
       Width           =   1095
    End
    Begin VB.CommandButton cmdImport 
       Appearance      =   0  'Flat
       Caption         =   "导入"
       Height          =   495
-      Left            =   3480
+      Left            =   2040
       TabIndex        =   84
-      Top             =   5760
+      Top             =   5880
       Width           =   1095
    End
    Begin VB.TextBox txtInput 
@@ -75,15 +97,15 @@ Begin VB.Form frmMain
       TabIndex        =   86
       Text            =   "Main.frx":0000
       Top             =   4920
-      Width           =   2775
+      Width           =   1575
    End
    Begin VB.CommandButton cmdLogicSolve 
       Appearance      =   0  'Flat
       Caption         =   "逻辑求解"
       Height          =   495
-      Left            =   5160
-      TabIndex        =   82
-      Top             =   240
+      Left            =   3480
+      TabIndex        =   81
+      Top             =   5640
       Width           =   1095
    End
    Begin VB.TextBox txtTable 
@@ -102,7 +124,7 @@ Begin VB.Form frmMain
       Index           =   80
       Left            =   4200
       MaxLength       =   1
-      TabIndex        =   81
+      TabIndex        =   80
       Top             =   4200
       Width           =   500
    End
@@ -122,7 +144,7 @@ Begin VB.Form frmMain
       Index           =   79
       Left            =   3720
       MaxLength       =   1
-      TabIndex        =   80
+      TabIndex        =   79
       Text            =   "8"
       Top             =   4200
       Width           =   500
@@ -143,7 +165,7 @@ Begin VB.Form frmMain
       Index           =   78
       Left            =   3240
       MaxLength       =   1
-      TabIndex        =   79
+      TabIndex        =   78
       Text            =   "3"
       Top             =   4200
       Width           =   500
@@ -164,7 +186,7 @@ Begin VB.Form frmMain
       Index           =   77
       Left            =   2640
       MaxLength       =   1
-      TabIndex        =   78
+      TabIndex        =   77
       Text            =   "6"
       Top             =   4200
       Width           =   500
@@ -185,7 +207,7 @@ Begin VB.Form frmMain
       Index           =   76
       Left            =   2160
       MaxLength       =   1
-      TabIndex        =   77
+      TabIndex        =   76
       Top             =   4200
       Width           =   500
    End
@@ -205,7 +227,7 @@ Begin VB.Form frmMain
       Index           =   75
       Left            =   1680
       MaxLength       =   1
-      TabIndex        =   76
+      TabIndex        =   75
       Top             =   4200
       Width           =   500
    End
@@ -225,7 +247,7 @@ Begin VB.Form frmMain
       Index           =   74
       Left            =   1080
       MaxLength       =   1
-      TabIndex        =   75
+      TabIndex        =   74
       Text            =   "1"
       Top             =   4200
       Width           =   500
@@ -246,7 +268,7 @@ Begin VB.Form frmMain
       Index           =   73
       Left            =   600
       MaxLength       =   1
-      TabIndex        =   74
+      TabIndex        =   73
       Top             =   4200
       Width           =   500
    End
@@ -266,7 +288,7 @@ Begin VB.Form frmMain
       Index           =   72
       Left            =   120
       MaxLength       =   1
-      TabIndex        =   73
+      TabIndex        =   72
       Text            =   "5"
       Top             =   4200
       Width           =   500
@@ -287,7 +309,7 @@ Begin VB.Form frmMain
       Index           =   71
       Left            =   4200
       MaxLength       =   1
-      TabIndex        =   72
+      TabIndex        =   71
       Top             =   3720
       Width           =   500
    End
@@ -307,7 +329,7 @@ Begin VB.Form frmMain
       Index           =   70
       Left            =   3720
       MaxLength       =   1
-      TabIndex        =   71
+      TabIndex        =   70
       Text            =   "9"
       Top             =   3720
       Width           =   500
@@ -328,7 +350,7 @@ Begin VB.Form frmMain
       Index           =   69
       Left            =   3240
       MaxLength       =   1
-      TabIndex        =   70
+      TabIndex        =   69
       Top             =   3720
       Width           =   500
    End
@@ -348,7 +370,7 @@ Begin VB.Form frmMain
       Index           =   68
       Left            =   2640
       MaxLength       =   1
-      TabIndex        =   69
+      TabIndex        =   68
       Text            =   "1"
       Top             =   3720
       Width           =   500
@@ -369,7 +391,7 @@ Begin VB.Form frmMain
       Index           =   67
       Left            =   2160
       MaxLength       =   1
-      TabIndex        =   68
+      TabIndex        =   67
       Top             =   3720
       Width           =   500
    End
@@ -389,7 +411,7 @@ Begin VB.Form frmMain
       Index           =   66
       Left            =   1680
       MaxLength       =   1
-      TabIndex        =   67
+      TabIndex        =   66
       Top             =   3720
       Width           =   500
    End
@@ -409,7 +431,7 @@ Begin VB.Form frmMain
       Index           =   65
       Left            =   1080
       MaxLength       =   1
-      TabIndex        =   66
+      TabIndex        =   65
       Top             =   3720
       Width           =   500
    End
@@ -429,7 +451,7 @@ Begin VB.Form frmMain
       Index           =   64
       Left            =   600
       MaxLength       =   1
-      TabIndex        =   65
+      TabIndex        =   64
       Text            =   "4"
       Top             =   3720
       Width           =   500
@@ -450,7 +472,7 @@ Begin VB.Form frmMain
       Index           =   63
       Left            =   120
       MaxLength       =   1
-      TabIndex        =   64
+      TabIndex        =   63
       Top             =   3720
       Width           =   500
    End
@@ -470,7 +492,7 @@ Begin VB.Form frmMain
       Index           =   62
       Left            =   4200
       MaxLength       =   1
-      TabIndex        =   63
+      TabIndex        =   62
       Top             =   3240
       Width           =   500
    End
@@ -490,7 +512,7 @@ Begin VB.Form frmMain
       Index           =   61
       Left            =   3720
       MaxLength       =   1
-      TabIndex        =   62
+      TabIndex        =   61
       Top             =   3240
       Width           =   500
    End
@@ -510,7 +532,7 @@ Begin VB.Form frmMain
       Index           =   60
       Left            =   3240
       MaxLength       =   1
-      TabIndex        =   61
+      TabIndex        =   60
       Text            =   "4"
       Top             =   3240
       Width           =   500
@@ -531,7 +553,7 @@ Begin VB.Form frmMain
       Index           =   59
       Left            =   2640
       MaxLength       =   1
-      TabIndex        =   60
+      TabIndex        =   59
       Top             =   3240
       Width           =   500
    End
@@ -551,7 +573,7 @@ Begin VB.Form frmMain
       Index           =   58
       Left            =   2160
       MaxLength       =   1
-      TabIndex        =   59
+      TabIndex        =   58
       Text            =   "5"
       Top             =   3240
       Width           =   500
@@ -572,7 +594,7 @@ Begin VB.Form frmMain
       Index           =   57
       Left            =   1680
       MaxLength       =   1
-      TabIndex        =   58
+      TabIndex        =   57
       Text            =   "8"
       Top             =   3240
       Width           =   500
@@ -593,7 +615,7 @@ Begin VB.Form frmMain
       Index           =   56
       Left            =   1080
       MaxLength       =   1
-      TabIndex        =   57
+      TabIndex        =   56
       Top             =   3240
       Width           =   500
    End
@@ -613,7 +635,7 @@ Begin VB.Form frmMain
       Index           =   55
       Left            =   600
       MaxLength       =   1
-      TabIndex        =   56
+      TabIndex        =   55
       Top             =   3240
       Width           =   500
    End
@@ -633,7 +655,7 @@ Begin VB.Form frmMain
       Index           =   54
       Left            =   120
       MaxLength       =   1
-      TabIndex        =   55
+      TabIndex        =   54
       Text            =   "9"
       Top             =   3240
       Width           =   500
@@ -654,7 +676,7 @@ Begin VB.Form frmMain
       Index           =   53
       Left            =   4200
       MaxLength       =   1
-      TabIndex        =   54
+      TabIndex        =   53
       Text            =   "6"
       Top             =   2640
       Width           =   500
@@ -675,7 +697,7 @@ Begin VB.Form frmMain
       Index           =   52
       Left            =   3720
       MaxLength       =   1
-      TabIndex        =   53
+      TabIndex        =   52
       Top             =   2640
       Width           =   500
    End
@@ -695,7 +717,7 @@ Begin VB.Form frmMain
       Index           =   51
       Left            =   3240
       MaxLength       =   1
-      TabIndex        =   52
+      TabIndex        =   51
       Top             =   2640
       Width           =   500
    End
@@ -715,7 +737,7 @@ Begin VB.Form frmMain
       Index           =   50
       Left            =   2640
       MaxLength       =   1
-      TabIndex        =   51
+      TabIndex        =   50
       Top             =   2640
       Width           =   500
    End
@@ -735,7 +757,7 @@ Begin VB.Form frmMain
       Index           =   49
       Left            =   2160
       MaxLength       =   1
-      TabIndex        =   50
+      TabIndex        =   49
       Top             =   2640
       Width           =   500
    End
@@ -755,7 +777,7 @@ Begin VB.Form frmMain
       Index           =   48
       Left            =   1680
       MaxLength       =   1
-      TabIndex        =   49
+      TabIndex        =   48
       Text            =   "7"
       Top             =   2640
       Width           =   500
@@ -776,7 +798,7 @@ Begin VB.Form frmMain
       Index           =   47
       Left            =   1080
       MaxLength       =   1
-      TabIndex        =   48
+      TabIndex        =   47
       Top             =   2640
       Width           =   500
    End
@@ -796,7 +818,7 @@ Begin VB.Form frmMain
       Index           =   46
       Left            =   600
       MaxLength       =   1
-      TabIndex        =   47
+      TabIndex        =   46
       Top             =   2640
       Width           =   500
    End
@@ -816,7 +838,7 @@ Begin VB.Form frmMain
       Index           =   45
       Left            =   120
       MaxLength       =   1
-      TabIndex        =   46
+      TabIndex        =   45
       Text            =   "3"
       Top             =   2640
       Width           =   500
@@ -837,7 +859,7 @@ Begin VB.Form frmMain
       Index           =   44
       Left            =   4200
       MaxLength       =   1
-      TabIndex        =   45
+      TabIndex        =   44
       Top             =   2160
       Width           =   500
    End
@@ -857,7 +879,7 @@ Begin VB.Form frmMain
       Index           =   43
       Left            =   3720
       MaxLength       =   1
-      TabIndex        =   44
+      TabIndex        =   43
       Text            =   "4"
       Top             =   2160
       Width           =   500
@@ -878,7 +900,7 @@ Begin VB.Form frmMain
       Index           =   42
       Left            =   3240
       MaxLength       =   1
-      TabIndex        =   43
+      TabIndex        =   42
       Text            =   "5"
       Top             =   2160
       Width           =   500
@@ -899,7 +921,7 @@ Begin VB.Form frmMain
       Index           =   41
       Left            =   2640
       MaxLength       =   1
-      TabIndex        =   42
+      TabIndex        =   41
       Top             =   2160
       Width           =   500
    End
@@ -919,7 +941,7 @@ Begin VB.Form frmMain
       Index           =   40
       Left            =   2160
       MaxLength       =   1
-      TabIndex        =   41
+      TabIndex        =   40
       Text            =   "9"
       Top             =   2160
       Width           =   500
@@ -940,7 +962,7 @@ Begin VB.Form frmMain
       Index           =   39
       Left            =   1680
       MaxLength       =   1
-      TabIndex        =   40
+      TabIndex        =   39
       Text            =   "6"
       Top             =   2160
       Width           =   500
@@ -961,7 +983,7 @@ Begin VB.Form frmMain
       Index           =   38
       Left            =   1080
       MaxLength       =   1
-      TabIndex        =   39
+      TabIndex        =   38
       Text            =   "8"
       Top             =   2160
       Width           =   500
@@ -982,7 +1004,7 @@ Begin VB.Form frmMain
       Index           =   37
       Left            =   600
       MaxLength       =   1
-      TabIndex        =   38
+      TabIndex        =   37
       Text            =   "7"
       Top             =   2160
       Width           =   500
@@ -1003,7 +1025,7 @@ Begin VB.Form frmMain
       Index           =   36
       Left            =   120
       MaxLength       =   1
-      TabIndex        =   37
+      TabIndex        =   36
       Top             =   2160
       Width           =   500
    End
@@ -1023,7 +1045,7 @@ Begin VB.Form frmMain
       Index           =   35
       Left            =   4200
       MaxLength       =   1
-      TabIndex        =   36
+      TabIndex        =   35
       Text            =   "8"
       Top             =   1680
       Width           =   500
@@ -1044,7 +1066,7 @@ Begin VB.Form frmMain
       Index           =   34
       Left            =   3720
       MaxLength       =   1
-      TabIndex        =   35
+      TabIndex        =   34
       Top             =   1680
       Width           =   500
    End
@@ -1064,7 +1086,7 @@ Begin VB.Form frmMain
       Index           =   33
       Left            =   3240
       MaxLength       =   1
-      TabIndex        =   34
+      TabIndex        =   33
       Top             =   1680
       Width           =   500
    End
@@ -1084,7 +1106,7 @@ Begin VB.Form frmMain
       Index           =   32
       Left            =   2640
       MaxLength       =   1
-      TabIndex        =   33
+      TabIndex        =   32
       Top             =   1680
       Width           =   500
    End
@@ -1104,7 +1126,7 @@ Begin VB.Form frmMain
       Index           =   31
       Left            =   2160
       MaxLength       =   1
-      TabIndex        =   32
+      TabIndex        =   31
       Top             =   1680
       Width           =   500
    End
@@ -1124,7 +1146,7 @@ Begin VB.Form frmMain
       Index           =   30
       Left            =   1680
       MaxLength       =   1
-      TabIndex        =   31
+      TabIndex        =   30
       Text            =   "4"
       Top             =   1680
       Width           =   500
@@ -1145,7 +1167,7 @@ Begin VB.Form frmMain
       Index           =   29
       Left            =   1080
       MaxLength       =   1
-      TabIndex        =   30
+      TabIndex        =   29
       Top             =   1680
       Width           =   500
    End
@@ -1165,7 +1187,7 @@ Begin VB.Form frmMain
       Index           =   28
       Left            =   600
       MaxLength       =   1
-      TabIndex        =   29
+      TabIndex        =   28
       Top             =   1680
       Width           =   500
    End
@@ -1185,7 +1207,7 @@ Begin VB.Form frmMain
       Index           =   27
       Left            =   120
       MaxLength       =   1
-      TabIndex        =   28
+      TabIndex        =   27
       Text            =   "2"
       Top             =   1680
       Width           =   500
@@ -1206,7 +1228,7 @@ Begin VB.Form frmMain
       Index           =   26
       Left            =   4200
       MaxLength       =   1
-      TabIndex        =   27
+      TabIndex        =   26
       Text            =   "1"
       Top             =   1080
       Width           =   500
@@ -1227,7 +1249,7 @@ Begin VB.Form frmMain
       Index           =   25
       Left            =   3720
       MaxLength       =   1
-      TabIndex        =   26
+      TabIndex        =   25
       Top             =   1080
       Width           =   500
    End
@@ -1247,7 +1269,7 @@ Begin VB.Form frmMain
       Index           =   24
       Left            =   3240
       MaxLength       =   1
-      TabIndex        =   25
+      TabIndex        =   24
       Top             =   1080
       Width           =   500
    End
@@ -1267,7 +1289,7 @@ Begin VB.Form frmMain
       Index           =   23
       Left            =   2640
       MaxLength       =   1
-      TabIndex        =   24
+      TabIndex        =   23
       Text            =   "9"
       Top             =   1080
       Width           =   500
@@ -1288,7 +1310,7 @@ Begin VB.Form frmMain
       Index           =   22
       Left            =   2160
       MaxLength       =   1
-      TabIndex        =   23
+      TabIndex        =   22
       Text            =   "6"
       Top             =   1080
       Width           =   500
@@ -1309,7 +1331,7 @@ Begin VB.Form frmMain
       Index           =   21
       Left            =   1680
       MaxLength       =   1
-      TabIndex        =   22
+      TabIndex        =   21
       Top             =   1080
       Width           =   500
    End
@@ -1329,7 +1351,7 @@ Begin VB.Form frmMain
       Index           =   20
       Left            =   1080
       MaxLength       =   1
-      TabIndex        =   21
+      TabIndex        =   20
       Text            =   "3"
       Top             =   1080
       Width           =   500
@@ -1350,7 +1372,7 @@ Begin VB.Form frmMain
       Index           =   19
       Left            =   600
       MaxLength       =   1
-      TabIndex        =   20
+      TabIndex        =   19
       Top             =   1080
       Width           =   500
    End
@@ -1370,7 +1392,7 @@ Begin VB.Form frmMain
       Index           =   18
       Left            =   120
       MaxLength       =   1
-      TabIndex        =   19
+      TabIndex        =   18
       Top             =   1080
       Width           =   500
    End
@@ -1390,7 +1412,7 @@ Begin VB.Form frmMain
       Index           =   17
       Left            =   4200
       MaxLength       =   1
-      TabIndex        =   18
+      TabIndex        =   17
       Top             =   600
       Width           =   500
    End
@@ -1410,7 +1432,7 @@ Begin VB.Form frmMain
       Index           =   16
       Left            =   3720
       MaxLength       =   1
-      TabIndex        =   17
+      TabIndex        =   16
       Text            =   "3"
       Top             =   600
       Width           =   500
@@ -1431,7 +1453,7 @@ Begin VB.Form frmMain
       Index           =   15
       Left            =   3240
       MaxLength       =   1
-      TabIndex        =   16
+      TabIndex        =   15
       Top             =   600
       Width           =   500
    End
@@ -1451,7 +1473,7 @@ Begin VB.Form frmMain
       Index           =   14
       Left            =   2640
       MaxLength       =   1
-      TabIndex        =   15
+      TabIndex        =   14
       Top             =   600
       Width           =   500
    End
@@ -1471,7 +1493,7 @@ Begin VB.Form frmMain
       Index           =   13
       Left            =   2160
       MaxLength       =   1
-      TabIndex        =   14
+      TabIndex        =   13
       Top             =   600
       Width           =   500
    End
@@ -1491,7 +1513,7 @@ Begin VB.Form frmMain
       Index           =   12
       Left            =   1680
       MaxLength       =   1
-      TabIndex        =   13
+      TabIndex        =   12
       Text            =   "5"
       Top             =   600
       Width           =   500
@@ -1512,7 +1534,7 @@ Begin VB.Form frmMain
       Index           =   11
       Left            =   1080
       MaxLength       =   1
-      TabIndex        =   12
+      TabIndex        =   11
       Top             =   600
       Width           =   500
    End
@@ -1532,7 +1554,7 @@ Begin VB.Form frmMain
       Index           =   10
       Left            =   600
       MaxLength       =   1
-      TabIndex        =   11
+      TabIndex        =   10
       Text            =   "1"
       Top             =   600
       Width           =   500
@@ -1553,7 +1575,7 @@ Begin VB.Form frmMain
       Index           =   9
       Left            =   120
       MaxLength       =   1
-      TabIndex        =   10
+      TabIndex        =   9
       Top             =   600
       Width           =   500
    End
@@ -1573,7 +1595,7 @@ Begin VB.Form frmMain
       Index           =   8
       Left            =   4200
       MaxLength       =   1
-      TabIndex        =   9
+      TabIndex        =   8
       Text            =   "4"
       Top             =   120
       Width           =   500
@@ -1594,7 +1616,7 @@ Begin VB.Form frmMain
       Index           =   7
       Left            =   3720
       MaxLength       =   1
-      TabIndex        =   8
+      TabIndex        =   7
       Top             =   120
       Width           =   500
    End
@@ -1614,7 +1636,7 @@ Begin VB.Form frmMain
       Index           =   6
       Left            =   3240
       MaxLength       =   1
-      TabIndex        =   7
+      TabIndex        =   6
       Text            =   "2"
       Top             =   120
       Width           =   500
@@ -1635,7 +1657,7 @@ Begin VB.Form frmMain
       Index           =   5
       Left            =   2640
       MaxLength       =   1
-      TabIndex        =   6
+      TabIndex        =   5
       Top             =   120
       Width           =   500
    End
@@ -1655,7 +1677,7 @@ Begin VB.Form frmMain
       Index           =   4
       Left            =   2160
       MaxLength       =   1
-      TabIndex        =   5
+      TabIndex        =   4
       Top             =   120
       Width           =   500
    End
@@ -1675,7 +1697,7 @@ Begin VB.Form frmMain
       Index           =   3
       Left            =   1680
       MaxLength       =   1
-      TabIndex        =   4
+      TabIndex        =   3
       Text            =   "1"
       Top             =   120
       Width           =   500
@@ -1696,7 +1718,7 @@ Begin VB.Form frmMain
       Index           =   2
       Left            =   1080
       MaxLength       =   1
-      TabIndex        =   3
+      TabIndex        =   2
       Text            =   "9"
       Top             =   120
       Width           =   500
@@ -1717,7 +1739,7 @@ Begin VB.Form frmMain
       Index           =   1
       Left            =   600
       MaxLength       =   1
-      TabIndex        =   2
+      TabIndex        =   1
       Text            =   "5"
       Top             =   120
       Width           =   500
@@ -1738,18 +1760,9 @@ Begin VB.Form frmMain
       Index           =   0
       Left            =   120
       MaxLength       =   1
-      TabIndex        =   1
+      TabIndex        =   0
       Top             =   120
       Width           =   500
-   End
-   Begin VB.CommandButton cmdClear 
-      Appearance      =   0  'Flat
-      Caption         =   "清空"
-      Height          =   495
-      Left            =   3480
-      TabIndex        =   0
-      Top             =   5040
-      Width           =   1095
    End
 End
 Attribute VB_Name = "frmMain"
@@ -1776,7 +1789,7 @@ Option Explicit
 
 
 ' 记录每个格子里可能出现的数字
-Private storage(80) As possibility
+Private storage(80) As Possibility
 
 ' 是否已load题目
 Private isQuestionLoad As Boolean
@@ -1856,13 +1869,13 @@ Private Function BackTrack() As Boolean
                 If storage(index).p(tempNum) = True Then
                     txtTable(index).Text = tempNum + 1
                     BuildPossibility
+                    If chkVisual.Value = 1 Then Me.Refresh ' 显示过程
                     If BackTrack() = True Then
                         '找到解
-                        'BackTrack = True
-                        'Exit Function
+                        'DebugInfo "可行解："
+                        'DebugInfo Export
                         BackTrack = True
-                        DebugInfo "可行解："
-                        DebugInfo Export
+                        Exit Function ' 认为解唯一
                     End If
                     txtTable(index).Text = ""
                     BuildPossibility
@@ -1881,7 +1894,11 @@ Private Sub cmdBackTrackSolve_Click()
     
     LoadQuestion
     BuildPossibility
-    BackTrack
+    If BackTrack Then
+        DebugInfo "找到可行解"
+    Else
+        DebugInfo "无解"
+    End If
 End Sub
 
 Private Sub cmdClear_Click()
@@ -1889,7 +1906,7 @@ Private Sub cmdClear_Click()
 End Sub
 
 Private Sub cmdExport_Click()
-    DebugInfo Export, , True
+    txtInput.Text = Export
 End Sub
 
 Private Sub cmdImport_Click()
@@ -1959,6 +1976,7 @@ Private Sub cmdLogicSolve_Click()
                 If numCount(k) = 1 Then
                     txtTable(numLastOccur(k)) = k + 1
                     actionCount = actionCount + 1
+                    If chkVisual.Value = 1 Then Me.Refresh ' 显示过程
                 End If
             Next k
         Next i
@@ -1979,6 +1997,7 @@ Private Sub cmdLogicSolve_Click()
                 If numCount(k) = 1 Then
                     txtTable(numLastOccur(k)) = k + 1
                     actionCount = actionCount + 1
+                    If chkVisual.Value = 1 Then Me.Refresh ' 显示过程
                 End If
             Next k
         Next j
@@ -2002,23 +2021,25 @@ Private Sub cmdLogicSolve_Click()
                     If numCount(k) = 1 Then
                         txtTable(numLastOccur(k)) = k + 1
                         actionCount = actionCount + 1
+                        If chkVisual.Value = 1 Then Me.Refresh ' 显示过程
                     End If
                 Next k
             Next column
         Next row
         
     Loop While actionCount <> 0 ' 当没有进展时结束
+    DebugInfo "推演完毕"
 End Sub
 
-Private Function possibility$(index%)
+Private Function PossibilityStr$(index%)
     ' 可能性信息
     
     Dim i%
     For i = 0 To 8
         If storage(index).p(i) = True Then
-            possibility = possibility & (i + 1) & " "
+            PossibilityStr = PossibilityStr & (i + 1) & " "
         Else
-            possibility = possibility & "_" & " "
+            PossibilityStr = PossibilityStr & "_" & " "
         End If
     Next i
 End Function
@@ -2099,5 +2120,5 @@ Private Sub txtTable_KeyPress(index As Integer, KeyAscii As Integer)
 End Sub
 
 Private Sub txtTable_MouseMove(index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
-    txtTable(index).ToolTipText = possibility(index)
+    txtTable(index).ToolTipText = PossibilityStr(index)
 End Sub
